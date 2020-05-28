@@ -1,0 +1,32 @@
+﻿@model List<CustomerBindingModel>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Company name</th>
+                <th>First name</th>
+                <th>Surname</th>
+                <th>Email</th>
+                <th>Phone number</th>
+                <th>Position</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var customer in Model)
+            {
+                <tr>
+                    <th>@customer.CompanyName</th>
+                    <th>@customer.FirstName</th>
+                    <th>@customer.SurName</th>
+                    <th>@customer.Email</th>
+                    <th>@customer.PhoneNumber</th>
+                    <th>@customer.Position</th>
+                    <th>
+                        <button class="btn btn-danger">Delete</button>
+                        <button class="btn btn-success">Edit</button>
+                    </th>
+                </tr>
+            }
+        </tbody>
+    </table>

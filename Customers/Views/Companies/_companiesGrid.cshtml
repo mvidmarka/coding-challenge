@@ -1,0 +1,26 @@
+﻿@model List<CompanyBindingModel>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">Company name</th>
+                <th scope="col">Actions</th>
+
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var company in Model)
+            {
+                <tr>
+                    
+                    <td>@company.CompanyName</td>
+                    <td>
+                        <button class="btn btn-danger">Delete</button>
+                        <button class="btn btn-info">Edit</button>
+                    </td>
+
+                </tr>
+            }
+
+        </tbody>
+    </table>

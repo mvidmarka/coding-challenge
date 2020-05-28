@@ -1,0 +1,58 @@
+﻿@model List<CustomerBindingModel>
+
+<h2>Customers</h2>
+
+<div class="row">
+    <div class="col-md-12">
+        <button id="add-person-btn" class="btn btn-info">Add person</button>
+        <button id="add-company-btn" class="btn btn-info">Add company</button>
+    </div>
+</div>
+<br />
+<div class="row">
+    <div class="col-md-12" id="customersGrid">
+        @Html.Partial("_customersGrid", Model)
+    </div>
+</div>
+
+<div id="add-customer-modal">
+
+</div>
+
+<script>
+
+        $("#add-person-btn" ).click(function() {
+
+            var url = '@Url.Action("AddPerson", "Customers")';
+            var targetDiv = $("#add-customer-modal");
+            loadModal(targetDiv, url);
+         
+        });
+
+           $("#add-company-btn" ).click(function() {
+            var url = '@Url.Action("AddCompany", "Customers")';
+            var targetDiv = $("#add-customer-modal");
+            loadModal(targetDiv, url);
+         
+        });
+
+    function loadModal(targetDiv, targetUrl) {
+
+        console.debug(targetDiv);
+           console.debug(targetUrl);
+
+             $.ajax({
+            url: targetUrl,
+            type: 'GET',
+            error: function (xhr) {
+                //TODO Add error handling for JS
+            },
+            success: function (result) {
+                targetDiv.html(result);
+            }
+        });
+    }
+
+
+
+</script>
