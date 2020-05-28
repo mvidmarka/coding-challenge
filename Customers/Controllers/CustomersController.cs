@@ -33,7 +33,7 @@ namespace Customers.Controllers
             PersonBindingModel personBindingModel = new PersonBindingModel();
             personBindingModel.Action = "InsertCustomer";
             personBindingModel.ActionMessage = "Insert new customer";
-            return PartialView("addCustomerModal", personBindingModel);
+            return PartialView("_addCustomerModal", personBindingModel);
         }
 
         [HttpPost]
@@ -52,7 +52,7 @@ namespace Customers.Controllers
 
             personBindingModel.Action = "UpdateCustomer";
             personBindingModel.ActionMessage = $"Edit customer {personBindingModel.FirstName} {personBindingModel.SurName}";
-            return PartialView("addCustomerModal", personBindingModel);
+            return PartialView("_addCustomerModal", personBindingModel);
         }
 
         [HttpPost]
