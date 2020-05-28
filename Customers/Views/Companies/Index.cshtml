@@ -1,8 +1,3 @@
-﻿
-@{
-    ViewBag.Title = "Index";
-    Layout = "~/Views/_ViewStart.cshtml";
-}
+﻿@model  List<CompanyBindingModel>
 
-<h2>Index</h2>
-
+@Html.Partial("_companiesGrid", Model)

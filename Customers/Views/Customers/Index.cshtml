@@ -1,58 +1,48 @@
-﻿@model List<CustomerBindingModel>
+﻿@model List<PersonBindingModel>
+<div class="row">
+    <h1 class="col-md-12 mt-4 mb-4">Customers</h1>
+</div>
 
-<h2>Customers</h2>
-
+<div class="row">
+    <div class="col-md-8 col-sm-6 mb-4">
+            <button id="add-person-btn" class="btn btn-primary">Add customer</button>
+            <button id="add-company-btn" class="btn btn-primary">Add company</button>
+        </div>
+        <div class="col-md-4 col-sm-6">
+            <!--I can also implement client side search so no server side calls are not neaded -->
+            <!--ajax customer search form -->
+            @using (Ajax.BeginForm("Search", "Customers", null, new AjaxOptions
+            {
+                HttpMethod = "POST",
+                UpdateTargetId = "customersGrid",
+                LoadingElementId = "master-loader",
+                InsertionMode = InsertionMode.Replace,
+            }, new { id = "person-modal-form" }))
+            {
+                <div class="input-group mb-2">
+                    <input name="query" type="text" class="form-control" placeholder="Search customers">
+                    <div class="input-group-append">
+                        <button class="btn btn-primary" type="submit">Search</button>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
 <div class="row">
     <div class="col-md-12">
-        <button id="add-person-btn" class="btn btn-info">Add person</button>
-        <button id="add-company-btn" class="btn btn-info">Add company</button>
+        <h3>Customers list</h3>
     </div>
-</div>
-<br />
-<div class="row">
     <div class="col-md-12" id="customersGrid">
         @Html.Partial("_customersGrid", Model)
     </div>
 </div>
 
+<!-- placeholder for Add edit modal-->
 <div id="add-customer-modal">
 
 </div>
 
-<script>
-
-        $("#add-person-btn" ).click(function() {
-
-            var url = '@Url.Action("AddPerson", "Customers")';
-            var targetDiv = $("#add-customer-modal");
-            loadModal(targetDiv, url);
-         
-        });
-
-           $("#add-company-btn" ).click(function() {
-            var url = '@Url.Action("AddCompany", "Customers")';
-            var targetDiv = $("#add-customer-modal");
-            loadModal(targetDiv, url);
-         
-        });
-
-    function loadModal(targetDiv, targetUrl) {
-
-        console.debug(targetDiv);
-           console.debug(targetUrl);
-
-             $.ajax({
-            url: targetUrl,
-            type: 'GET',
-            error: function (xhr) {
-                //TODO Add error handling for JS
-            },
-            success: function (result) {
-                targetDiv.html(result);
-            }
-        });
-    }
-
-
-
-</script>
+@section scripts
+{
+    <script src="~/Scripts/Customers/index.js"></script>
+}

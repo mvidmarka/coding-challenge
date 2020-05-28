@@ -13,13 +13,15 @@ namespace Customers.DAL.Services
 {
     public class PersonService : IPersonService<PersonBindingModel>
     {
-        public async Task<PersonBindingModel> DeleteAsync(PersonBindingModel item)
+        public async Task<PersonBindingModel> DeleteAsync(Guid id)
         {
-            using(Database database = new Database())
-            {
-                var person = database.Persons.FirstOrDefault(x => x.Id == item.Id);
+            PersonBindingModel item = new PersonBindingModel();
 
-                if(person != null)
+            using (Database database = new Database())
+            {
+                var person = database.Persons.FirstOrDefault(x => x.Id == id);
+
+                if (person != null)
                 {
                     database.Persons.Remove(person);
                     await database.SaveChangesAsync();
@@ -42,11 +44,23 @@ namespace Customers.DAL.Services
             {
                 using (Database database = new Database())
                 {
-                    var dbModels = database.Persons.ToList();
-                    results = dbModels
-                    .Select(x => new PersonBindingModel().InjectFrom(x)).Cast<PersonBindingModel>()
-                    .ToList();
+                    foreach (var person in database.Persons.ToList())
+                    {
+                        //TODO implement value injecter
+                        PersonBindingModel personBindingModel = new PersonBindingModel()
+                        {
+                            CompanyId = person.CompanyId,
+                            CompanyName =  person.Company?.CompanyName,
+                            Email = person.Email,
+                            FirstName = person.FirstName,
+                            PhoneNumber = person.PhoneNumber,
+                            Position = person.Position,
+                            Id = person.Id,
+                            SurName = person.SurName
+                        };
 
+                        results.Add(personBindingModel);
+                    }
                 }
             });
 
@@ -71,7 +85,6 @@ namespace Customers.DAL.Services
             return result;
         }
 
-
         public async Task<PersonBindingModel> InsertAsync(PersonBindingModel item)
         {
             await Task.Run(() =>
@@ -79,6 +92,7 @@ namespace Customers.DAL.Services
                 using (Database database = new Database())
                 {
                     var entity = new Person();
+                    entity.DateEdited = DateTime.UtcNow;
                     entity.InjectFrom(item);
 
                     database.Persons.Add(entity);
@@ -92,15 +106,33 @@ namespace Customers.DAL.Services
             return item;
         }
 
+        public async Task<IEnumerable<PersonBindingModel>> SearchPersons(string query)
+        {
+            IEnumerable<PersonBindingModel> items = await GetAllAsync();
+            IEnumerable<PersonBindingModel> results = new List<PersonBindingModel>();
+
+            await Task.Run(() =>
+            {
+                results = items.Where(x =>
+                (x.CompanyName ?? "").ToLower().ToLower().Contains(query.ToLower()) ||
+                (x.Email ?? "").ToLower().Contains(query.ToLower()) ||
+                (x.FirstName ?? "").ToLower().Contains(query.ToLower()) ||
+                (x.SurName ?? "").ToLower().Contains(query.ToLower()) ||
+                (x.Position ?? "").ToLower().Contains(query.ToLower())).ToList();
+
+            });
+            return results;
+        }
+
         public async Task<PersonBindingModel> UpdateAsync(PersonBindingModel item)
         {
+         
             await Task.Run(() =>
             {
                 using (Database database = new Database())
                 {
                     var entity = database.Persons.FirstOrDefault(x => x.Id == item.Id);
                     entity.InjectFrom(item);
-
                     database.Persons.Attach(entity);
                     database.Entry(entity).State = System.Data.Entity.EntityState.Modified;
                     database.SaveChanges();
@@ -113,5 +145,4 @@ namespace Customers.DAL.Services
             return item;
         }
     }
-    
 }

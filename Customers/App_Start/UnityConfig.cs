@@ -64,7 +64,7 @@ namespace Customers
             // TODO: Register your type's mappings here.
             container.RegisterType<IPersonService<PersonBindingModel>, PersonService>();
             container.RegisterType<ICompanyService<CompanyBindingModel>, CompanyService>();
-            container.RegisterType<ICustomerService<CustomerBindingModel>, CustomerService>();
+           
         }
     }
 }

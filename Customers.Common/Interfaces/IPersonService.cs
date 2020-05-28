@@ -9,7 +9,7 @@ namespace Customers.Common.Interfaces
 {
     public interface IPersonService<PersonBindingModel> : IBaseService<PersonBindingModel>
     {
-
+        Task<IEnumerable<PersonBindingModel>> SearchPersons(string query);
        //TODO add other business stuff for person
 
     }

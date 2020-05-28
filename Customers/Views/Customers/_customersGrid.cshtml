@@ -1,32 +1,77 @@
-﻿@model List<CustomerBindingModel>
+﻿@model List<PersonBindingModel>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Company name</th>
-                <th>First name</th>
-                <th>Surname</th>
-                <th>Email</th>
-                <th>Phone number</th>
-                <th>Position</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var customer in Model)
-            {
+@if (Model.Count > 0)
+{
+    <div class="table-responsive">
+        <table id="customers-table" class="table">
+            <thead>
                 <tr>
-                    <th>@customer.CompanyName</th>
-                    <th>@customer.FirstName</th>
-                    <th>@customer.SurName</th>
-                    <th>@customer.Email</th>
-                    <th>@customer.PhoneNumber</th>
-                    <th>@customer.Position</th>
-                    <th>
-                        <button class="btn btn-danger">Delete</button>
-                        <button class="btn btn-success">Edit</button>
-                    </th>
+                    <th>Company name</th>
+                    <th>First name</th>
+                    <th>Surname</th>
+                    <th>Email</th>
+                    <th>Phone number</th>
+                    <th>Position</th>
+                    <th class="text-center">Actions</th>
                 </tr>
+            </thead>
+            <tbody>
+                @foreach (var customer in Model)
+                {
+                    <tr id="@customer.Id">
+                        <td>@customer.CompanyName</td>
+                        <td>@customer.FirstName</td>
+                        <td>@customer.SurName</td>
+                        <td>@customer.Email</td>
+                        <td>@customer.PhoneNumber</td>
+                        <td>@customer.Position</td>
+                        <td class="text-center">
+                            <div class="btn-group" role="group">
+                                <button data-customer-id="@customer.Id" title="Delete customer" class="btn btn-link btn-delete">Delete</button>
+                                <button data-customer-id="@customer.Id" title="Edit customer" class="btn btn-link btn-edit">Edit</button>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+else
+{
+    <p class="col-md-12 text-center">No data found add customers!</p>
+}
+
+
+<script>
+    //delete
+    $(".btn-delete").click(function () {
+
+        //I can also create custom more beutiful confirm modal but for this i have used default one
+        if (confirm('Are you sure you want to delete customer?')) {
+
+            var customerId = $(this).data('customer-id');
+            $.ajax({
+            url: '@Url.Action("DeleteCustomer", "Customers")',
+            type: 'POST',
+            data: {Id : customerId},
+            success: function (result) {
+              $('#' + customerId).remove();
+            },
+            error: function (xhr) {
+
             }
-        </tbody>
-    </table>
+        });
+        }
+
+    });
+
+    //edit
+    $(".btn-edit").click(function () {
+
+    var customerId = $(this).data('customer-id');
+    var url = '/customers/editcustomer/' + customerId;
+    var targetDiv = $("#add-customer-modal");
+    loadModal(targetDiv, url);
+    });
+</script>

@@ -13,11 +13,13 @@ namespace Customers.DAL.Services
 {
     public class CompanyService : ICompanyService<CompanyBindingModel>
     {
-        public async Task<CompanyBindingModel> DeleteAsync(CompanyBindingModel item)
+        CompanyBindingModel item = new CompanyBindingModel();
+
+        public async Task<CompanyBindingModel> DeleteAsync(Guid id)
         {
             using (Database database = new Database())
             {
-                var company = database.Companies.FirstOrDefault(x => x.Id == item.Id);
+                var company = database.Companies.FirstOrDefault(x => x.Id == id);
 
                 if (company != null)
                 {
@@ -77,6 +79,7 @@ namespace Customers.DAL.Services
                 using (Database database = new Database())
                 {
                     var entity = new Company();
+                    entity.DateEdited = DateTime.UtcNow;
                     entity.InjectFrom(item);
 
                     database.Companies.Add(entity);

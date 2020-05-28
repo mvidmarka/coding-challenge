@@ -44,11 +44,9 @@
   <ItemGroup>
     <Compile Include="BindingModels\BaseBindingModel.cs" />
     <Compile Include="BindingModels\CompanyBindingModel.cs" />
-    <Compile Include="BindingModels\CustomerBindingModel.cs" />
     <Compile Include="BindingModels\PersonBindingModel.cs" />
     <Compile Include="Interfaces\IBaseService.cs" />
     <Compile Include="Interfaces\ICompanyService.cs" />
-    <Compile Include="Interfaces\ICustomerService.cs" />
     <Compile Include="Interfaces\IPersonService.cs" />
     <Compile Include="Interfaces\IPositionService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

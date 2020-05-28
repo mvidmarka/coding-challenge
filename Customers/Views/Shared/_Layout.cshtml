@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.Title - My ASP.NET Application</title>
+    <title>Customers database</title>
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
     @Scripts.Render("~/bundles/jquery")
@@ -11,27 +11,40 @@
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand" href="#">Navbar</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+        <a class="navbar-brand" href="#">Customers</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#mainnavbar" aria-controls="mainnavbar" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+        <div class="collapse navbar-collapse" id="mainnavbar">
+            <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+                <li class="nav-item">
+                    <a class="nav-item nav-link" href="@Url.Action("Index", "Home")">Home <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-item nav-link" href="@Url.Action("Index", "Customers")">Customers</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-item nav-link" href="@Url.Action("Index", "Companies")">Companies</a>
+                </li>
+            </ul>
             <div class="navbar-nav">
-                <a class="nav-item nav-link" href="@Url.Action("Index", "Home")">Home <span class="sr-only">(current)</span></a>
-                <a class="nav-item nav-link" href="@Url.Action("Index", "Customers")">Customers</a>
-                    @Html.Partial("_LoginPartial") 
+                @Html.Partial("_LoginPartial")
             </div>
         </div>
     </nav>
-
     <div class="container body-content">
         @RenderBody()
         <hr />
         <footer>
-            <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
+            <p>&copy; @DateTime.Now.Year Customer database</p>
         </footer>
     </div>
 
+    <!---Added for example css styles must be in class and separate file-->
+    <!--I am not focusing much at design -->
+    <div id="master-loader" style="position: absolute; left:50%; top:40%; display:none; z-index: 100000">
+        <h1>Working...</h1>
+    </div>
 
     @Scripts.Render("~/bundles/bootstrap")
     @RenderSection("scripts", required: false)

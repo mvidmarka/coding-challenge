@@ -11,7 +11,7 @@ namespace Customers.Common.Interfaces
         Task<IEnumerable<T>> GetAllAsync();
         Task<T> GetByIdAsync(Guid id);
         Task<T> InsertAsync(T item);
-        Task<T> DeleteAsync(T item);
+        Task<T> DeleteAsync(Guid id);
         Task<T> UpdateAsync(T item);
     }
 }

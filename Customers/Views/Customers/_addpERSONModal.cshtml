@@ -1,26 +1,90 @@
 ﻿@model PersonBindingModel
 
-<!-- Modal -->
-<div class="modal fade" id="person-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Add new person</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                ...
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Save changes</button>
+@using (Ajax.BeginForm(Model.Action, "Customers", null, new AjaxOptions
+        {
+            HttpMethod = "POST",
+            UpdateTargetId = "customersGrid",
+            LoadingElementId = "master-loader",
+            InsertionMode = InsertionMode.Replace,
+            OnSuccess = "hideModal"
+
+    }, new { id = "person-modal-form" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(x => x.Id)
+    <div class="modal fade" id="person-modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">@Model.ActionMessage</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.FirstName)
+                        @Html.TextBoxFor(x => x.FirstName, new { @class = "form-control", autofocus = "autofocus"})
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.SurName)
+                        @Html.TextBoxFor(x => x.SurName, new { @class = "form-control" })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.Email)
+                        @Html.TextBoxFor(x => x.Email, new { @class = "form-control" })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.PhoneNumber)
+                        @Html.TextBoxFor(x => x.PhoneNumber, new { @class = "form-control" })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.Position)
+                        @Html.TextBoxFor(x => x.Position, new { @class = "form-control" })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.CompanyId)
+                        <select class="form-control" name="CompanyId" id="CompanyId">
+                        </select>
+                    </div>
+                    @Html.ValidationSummary("", new { @class = "text-danger" })
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save changes</button>
+                </div>
             </div>
         </div>
     </div>
-</div>
+}
 
 <script>
-    $("#person-modal").modal()
+    //show modal when load is done
+    $("#person-modal").modal();
+
+    //load company items to dropdown
+   $(document).ready(function() {
+    $('#CompanyId').empty().append('<option>Select company</option>');
+       $.ajax({
+           url: '@Url.Action("GetCompanies", "DropDown")',
+           dataType: 'json',
+           type: 'GET',
+           success: function (response) {
+               var array = response;
+               if (array != '') {
+                   for (i in array) {
+                       $("#CompanyId").append("<option value=" + array[i].Id + ">" + array[i].CompanyName + "</option>");
+                   }
+               }
+           },
+           error: function (x, e) {
+               //TODO add error log JS side
+           }
+       });
+});
+
+    //hide modal after success
+    function hideModal() {
+        $('#person-modal').modal('hide');
+    }
 </script>

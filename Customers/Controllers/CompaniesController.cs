@@ -6,27 +6,30 @@ using System.Web;
 using System.Web.Mvc;
 using Customers.Common.Interfaces;
 using Customers.Common.BindingModels;
+using Customers.DAL.Services;
 
 namespace Customers.Controllers
 {
+    [Authorize]
     public class CompaniesController : Controller
     {
-        private readonly ICompanyService<CompanyBindingModel> _service;
+        private readonly ICompanyService<CompanyBindingModel> _companyService;
 
-        public CompaniesController(ICompanyService<CompanyBindingModel> service)
+        public CompaniesController(CompanyService companyService)
         {
-            _service = service;
+            _companyService = companyService;
         }
 
         // GET: Companires
-        public  ActionResult Index()
+        public async  Task<ActionResult> Index()
         {
-            return View();
+            var items = await _companyService.GetAllAsync();
+            return View(items);
         }
 
         public async Task<ActionResult> GetAll()
         {
-            var companies = await _service.GetAllAsync();
+            var companies = await _companyService.GetAllAsync();
             return View("_companiesGrid", companies);
         }
 
@@ -34,7 +37,7 @@ namespace Customers.Controllers
         {
             try
             {
-                var model = await _service.GetByIdAsync(id);
+                var model = await _companyService.GetByIdAsync(id);
                 return View("_company", model);
             }
             catch
@@ -52,7 +55,7 @@ namespace Customers.Controllers
         {
             try
             {
-                await _service.InsertAsync(model);
+                await _companyService.InsertAsync(model);
                 return View("_company", model);
             } 
             catch
@@ -69,7 +72,7 @@ namespace Customers.Controllers
         {
             try
             {
-                await _service.UpdateAsync(model);
+                await _companyService.UpdateAsync(model);
                 return View("_company", model);
             }
             catch
